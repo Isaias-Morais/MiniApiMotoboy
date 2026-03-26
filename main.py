@@ -1,6 +1,6 @@
-from database.base import Base
-from database.engine import engine
-from models.motoboy import Motoboy
-from models.pedido import Pedidos
+from fastapi import FastAPI
+from routers.pedidos import router as pedido_router
 
-Base.metadata.create_all(bind=engine)
+app = FastAPI()
+
+app.include_router(pedido_router)

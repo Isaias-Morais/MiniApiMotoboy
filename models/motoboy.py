@@ -1,5 +1,3 @@
-from email.policy import default
-
 from sqlalchemy import Boolean
 from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
