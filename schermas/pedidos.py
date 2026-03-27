@@ -10,7 +10,7 @@ class PedidoBase(BaseModel):
 
 
 class PedidoResponse(PedidoBase):
-    id: int
+    id:int
     status:str
     data_de_criacao: datetime
     class Config:
@@ -19,3 +19,8 @@ class PedidoResponse(PedidoBase):
 
 class PedidoCreate(PedidoBase):
     pass
+
+class PedidoList(BaseModel):
+    id:int
+    nome:str
+    data_de_criacao:datetime
