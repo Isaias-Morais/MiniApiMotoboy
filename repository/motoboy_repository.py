@@ -1,33 +1,28 @@
 from models.motoboy import Motoboy
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 
-def listar_motoboys(session):
+
+def listar_motoboys(session:Session):
     return session.query(Motoboy).all()
 
 
-def busca_moto_ativa_motoboy(session):
-    moto = session.query(Motoboy).filter(Motoboy.moto_ativa != None).first()
-    return moto.id if moto else None
+def alterar_motoboy_status(session:Session,id:int):
+    motoboy = busca_motoboy(session,id)
 
+    if not motoboy:
+        raise HTTPException(
+            status_code=404,
+            detail='Motoboy não encontrado'
+        )
 
-def definir_moto_ativa_motoboy(session,moto_id):
-    motoboy = session.query(Motoboy).filter(Motoboy.id == 1).first()
-    if motoboy:
-        motoboy.moto_ativa = moto_id
-        session.commit()
-        return True
     else:
-        return False
-
-
-def redefinir_moto_ativa_motoboy(session):
-    motoboy = session.query(Motoboy).filter(Motoboy.id == 1).first()
-    if motoboy:
-        motoboy.moto_ativa = None
+        motoboy.status_ativo = not motoboy.status_ativo
+        session.flush()
         session.commit()
-    else:
-        return False
+        return motoboy
 
 
-def busca_motoboy(id:int,session:Session):
+
+def busca_motoboy(session:Session,id:int):
     return session.query(Motoboy).filter(Motoboy.id == id).first()

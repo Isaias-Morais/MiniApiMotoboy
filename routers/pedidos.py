@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Depends
-from schermas.pedidos import PedidoCreate,PedidoResponse,PedidoList
+from schemas.pedidos import PedidoCreate,PedidoResponse,PedidoList
 from database.db import get_db
 from sqlalchemy.orm import Session
 

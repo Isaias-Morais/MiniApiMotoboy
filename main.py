@@ -8,6 +8,10 @@ import models.motoboy
 import models.pedido
 app = FastAPI()
 
+@app.get('/')
+async def home():
+    return {"message":"acesse '/docs' "}
+
 @app.on_event('startup')
 def startup():
     Base.metadata.create_all(engine)
