@@ -1,28 +1,55 @@
 from models.motoboy import Motoboy
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 
 
-def listar_motoboys(session:Session):
+def lista_motoboys_repository(session:Session):
     return session.query(Motoboy).all()
 
 
-def alterar_motoboy_status(session:Session,id:int):
-    motoboy = busca_motoboy(session,id)
+def alterar_motoboy_status_ativo_repository(session:Session,id:int):
+    motoboy = busca_motoboy_repository(session,id)
 
     if not motoboy:
-        raise HTTPException(
-            status_code=404,
-            detail='Motoboy não encontrado'
-        )
+        return None
 
-    else:
-        motoboy.status_ativo = not motoboy.status_ativo
-        session.flush()
-        session.commit()
-        return motoboy
+    motoboy.status_ativo = not motoboy.status_ativo
+    session.flush()
+    session.commit()
+    session.refresh(motoboy)
+    return motoboy
 
 
+def alterar_motoboy_status_livre_repository(session:Session,id:int):
+    motoboy = busca_motoboy_repository(session,id)
 
-def busca_motoboy(session:Session,id:int):
-    return session.query(Motoboy).filter(Motoboy.id == id).first()
+    if not motoboy:
+        return None
+
+    motoboy.status_livre = not motoboy.status_livre
+    session.flush()
+    session.commit()
+    session.refresh(motoboy)
+    return motoboy
+
+
+def busca_motoboy_repository(session:Session,id:int):
+    motoboy = session.query(Motoboy).filter(Motoboy.id == id).first()
+
+    if not motoboy:
+        return None
+
+    return  motoboy
+
+
+
+def deletar_motoboy_repository(session:Session,id:int):
+    motoboy = busca_motoboy_repository(session,id)
+
+    if not motoboy:
+        return None
+
+    session.delete(motoboy)
+    session.commit()
+    return motoboy
+
+

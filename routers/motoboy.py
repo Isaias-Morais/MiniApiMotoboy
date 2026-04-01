@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends
-from schemas.motoboy import MotoboyCreate, MotoboyResponse, MotoboyList, MotoboyDelete, MotoboyStatus
+from schemas.motoboy import *
 from database.db import get_db
 from sqlalchemy.orm import Session
-from service.motoboy_service import registra_motoboy, lista_motoboy, response_motoboy, motoboy_altera_status
-
+from service.motoboy_service import *
 router = APIRouter(prefix='/motoboy')
 
 
@@ -22,9 +21,14 @@ async def motoboy_list(db: Session = Depends(get_db)):
 
 @router.delete('/{id}',response_model=MotoboyDelete)
 async def motoboy_delete(id:int,db : Session = Depends(get_db)):
-    pass
+    return delete_motoboy(db,id)
 
 
-@router.patch('/{id}',response_model=MotoboyStatus)
-async def motoboy_status(id:int,db : Session = Depends(get_db)):
-    return motoboy_altera_status(db,id)
+@router.patch('/{id}/ativo',response_model=MotoboyStatus)
+async def motoboy_status_ativo(id:int,db : Session = Depends(get_db)):
+    return alterar_status_ativo_motoboy(db,id)
+
+
+@router.patch('/{id}/livre',response_model=MotoboyStatus)
+async def motoboy_status_livre(id:int,db : Session = Depends(get_db)):
+    return alterar_status_livre_motoboy(db,id)

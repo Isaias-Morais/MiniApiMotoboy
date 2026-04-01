@@ -13,6 +13,8 @@ class Motoboy(Base):
     veiculo : Mapped[str] = mapped_column(nullable=False)
     telefone : Mapped[str] = mapped_column(nullable=False)
     status_ativo : Mapped[bool] = mapped_column(Boolean,default=False)
+    status_livre : Mapped[bool] = mapped_column(Boolean, default=False)
+    ultimo_pedido : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
     data_de_criacao: Mapped[datetime] = mapped_column(DateTime(timezone=True),server_default=func.now())
 
     pedidos : Mapped['Pedidos'] = relationship(back_populates='motoboy')

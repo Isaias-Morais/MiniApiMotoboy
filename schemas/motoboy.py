@@ -11,6 +11,7 @@ class MotoboyBase(BaseModel):
 class MotoboyResponse(MotoboyBase):
     id : int
     status_ativo : bool
+    status_livre :bool
     data_de_criacao : datetime
     class Config:
         from_attributes = True
@@ -34,4 +35,5 @@ class MotoboyStatus(BaseModel):
     id : int
     nome : str
     status_ativo : bool
+    status_livre : bool
 
