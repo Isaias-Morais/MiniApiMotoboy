@@ -6,8 +6,8 @@ def listar_pedidos_repository(session:Session):
     return session.query(Pedidos).all()
 
 
-def alterar_pedidos_status_repository(session:Session,id:int,status:StatusPedidos):
-    pedido = busca_pedido_repository(session,id)
+def alterar_pedidos_status_repository(session:Session,pedido:Pedidos,status:StatusPedidos):
+    pedido = pedido
 
     if not pedido:
         return None

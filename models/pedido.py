@@ -11,6 +11,7 @@ class Pedidos(Base):
 
 
     id : Mapped[int] = mapped_column(primary_key=True)
+    usuario :Mapped[str] = mapped_column(nullable=False)
     descricao : Mapped[str] = mapped_column(nullable=False)
     observacao : Mapped[str] = mapped_column(nullable=False)
     endereco : Mapped[str] = mapped_column(nullable=False)

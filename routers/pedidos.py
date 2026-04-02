@@ -9,17 +9,17 @@ router = APIRouter(prefix='/pedidos')
 
 
 @router.post('/')
-async def pedido_create(pedidos:PedidoCreate,db: Session = Depends(get_db)):
+async def create_pedido(pedidos:PedidoCreate,db: Session = Depends(get_db)):
     return registra_pedidos(db,pedidos)
 
 
 @router.get('/{id}',response_model=PedidoResponse)
-async def pedido_reponse(id:int,db: Session = Depends(get_db)):
-    return response_pedido(db,id)
+async def response_pedido(id:int,db: Session = Depends(get_db)):
+    return resposta_pedido(db,id)
 
 
 @router.get('/',response_model=list[PedidoList])
-async def pedidos_list(db: Session = Depends(get_db)):
+async def list_pedido(db: Session = Depends(get_db)):
     return lista_pedidos(db)
 
 
@@ -28,6 +28,14 @@ async def delete_pedido(id:int,db:Session = Depends(get_db)):
     return deletar_pedido(db,id)
 
 
-@router.patch('/{id}/status/{status}',response_model=PedidoStatus)
-async def pedido_status(id:int,status:StatusPedidos,db : Session = Depends(get_db)):
-    return alterar_status_pedido(db,id,status)
+@router.patch('/{id}/aceita_pedido',response_model=PedidoStatus)
+async def accepted_pedido(id:int,db:Session = Depends(get_db)):
+    return aceitar_pedido(db,id)
+
+@router.patch('/{id}/cancela_pedido',response_model=PedidoStatus)
+async def cancel_pedido(id:int,db:Session = Depends(get_db)):
+    return cancelar_pedido(db,id)
+
+@router.patch('/{id}/pronto_pedido',response_model=PedidoStatus)
+async def ready_pedido(id:int,db:Session = Depends(get_db)):
+    return pedido_pronto(db,id)

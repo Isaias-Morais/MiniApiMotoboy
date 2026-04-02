@@ -1,5 +1,6 @@
 from models.motoboy import Motoboy
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 
 def lista_motoboys_repository(session:Session):
@@ -19,8 +20,8 @@ def alterar_motoboy_status_ativo_repository(session:Session,id:int):
     return motoboy
 
 
-def alterar_motoboy_status_livre_repository(session:Session,id:int):
-    motoboy = busca_motoboy_repository(session,id)
+def alterar_motoboy_status_livre_repository(session:Session,motoboy:Motoboy):
+    motoboy = motoboy
 
     if not motoboy:
         return None
@@ -51,5 +52,21 @@ def deletar_motoboy_repository(session:Session,id:int):
     session.delete(motoboy)
     session.commit()
     return motoboy
+
+def atualiza_ultimo_pedido_repository(session:Session,id:int):
+
+    motoboy : Motoboy = busca_motoboy_repository(session,id)
+
+    if not motoboy:
+        return None
+
+    motoboy.ultimo_pedido = datetime.utcnow()
+    session.flush()
+    session.commit()
+    session.refresh(motoboy)
+    return motoboy
+
+
+
 
 

@@ -6,6 +6,7 @@ from models.enum import StatusPedidos
 
 
 class PedidoBase(BaseModel):
+    usuario : str
     descricao:str
     observacao: Optional[str]
     endereco: str
@@ -37,3 +38,13 @@ class PedidoStatus(BaseModel):
     id : int
     descricao : str
     status : str
+
+
+class PedidoRota(BaseModel):
+    id : int
+    usuario : str
+    status : str
+    
+    
+
+    

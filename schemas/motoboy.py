@@ -13,6 +13,7 @@ class MotoboyResponse(MotoboyBase):
     status_ativo : bool
     status_livre :bool
     data_de_criacao : datetime
+    ultimo_pedido : datetime
     class Config:
         from_attributes = True
 
@@ -36,4 +37,6 @@ class MotoboyStatus(BaseModel):
     nome : str
     status_ativo : bool
     status_livre : bool
+
+
 

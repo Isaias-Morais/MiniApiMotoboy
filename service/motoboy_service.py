@@ -25,7 +25,7 @@ def lista_motoboy(db:Session):
         return f'erro interno {e}'
 
 
-def response_motoboy(db:Session,id:int):
+def resposta_motoboy(db:Session,id:int):
 
     motoboy = busca_motoboy_repository(db,id)
 
@@ -53,7 +53,7 @@ def alterar_status_ativo_motoboy(db:Session,id:int):
 
 def alterar_status_livre_motoboy(db:Session,id:int):
 
-    motoboy = alterar_motoboy_status_livre_repository(db,id)
+    motoboy : Motoboy = busca_motoboy_repository(db,id)
 
     if not motoboy:
         raise HTTPException(
@@ -61,6 +61,12 @@ def alterar_status_livre_motoboy(db:Session,id:int):
             detail='Motoboy não encontrado'
         )
 
+    if motoboy.status_ativo != True:
+        raise HTTPException(
+            status_code=400,
+            detail='Motoboy não esta ativo'
+        )
+    alterar_motoboy_status_livre_repository(db,motoboy)
     return motoboy
 
 
@@ -74,3 +80,15 @@ def delete_motoboy(db:Session,id:int):
         )
 
     return motoboy
+
+def atualizar_ultimo_pedido(db:Session,id:int):
+    motoboy = atualiza_ultimo_pedido_repository(db,id)
+
+    if not motoboy:
+        raise HTTPException(
+            status_code=404,
+            detail='Motoboy não encontrado'
+        )
+
+    return motoboy
+
