@@ -1,3 +1,4 @@
+from models.motoboy import Motoboy
 from models.pedido import Pedidos
 from sqlalchemy.orm import Session
 from models.enum import StatusPedidos
@@ -35,3 +36,13 @@ def deletar_pedido_repository(session:Session,id:int):
     session.delete(pedido)
     session.commit()
     return pedido
+
+
+def defini_motoboy_id_pedido_repository(session:Session,pedido:Pedidos,motoboy:Motoboy):
+
+    pedido.motoboy_id = motoboy.id
+    session.flush()
+    session.commit()
+    session.refresh(pedido)
+    return pedido
+

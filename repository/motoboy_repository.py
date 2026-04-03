@@ -1,3 +1,5 @@
+from sqlalchemy import nulls_first
+
 from models.motoboy import Motoboy
 from sqlalchemy.orm import Session
 from datetime import datetime
@@ -53,9 +55,9 @@ def deletar_motoboy_repository(session:Session,id:int):
     session.commit()
     return motoboy
 
-def atualiza_ultimo_pedido_repository(session:Session,id:int):
+def atualiza_ultimo_pedido_motoboy_repository(session:Session,motoboy_id:int):
 
-    motoboy : Motoboy = busca_motoboy_repository(session,id)
+    motoboy : Motoboy = busca_motoboy_repository(session,motoboy_id)
 
     if not motoboy:
         return None
@@ -67,6 +69,20 @@ def atualiza_ultimo_pedido_repository(session:Session,id:int):
     return motoboy
 
 
+def procurar_motoboy_disponivel_repository(session:Session):
+    motoboy = session.query(
+        Motoboy
+    ).filter(
+        Motoboy.status_ativo == True,
+        Motoboy.status_livre == True
+    ).order_by(
+        nulls_first(Motoboy.ultimo_pedido.asc())
+    ).first()
+
+    if not motoboy:
+        return None
+
+    return motoboy
 
 
 

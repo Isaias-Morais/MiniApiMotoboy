@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from repository.base_repository import salvar_objeto
 from models.pedido import Pedidos
 from models.enum import StatusPedidos
+from service.motoboy_service import atualizar_ultimo_pedido_motoboy,procura_motoboy_disponivel
 from repository.pedidos_repository import *
 from fastapi import HTTPException
 from schemas.pedidos import *
@@ -138,7 +139,10 @@ def pedido_entregue(db:Session,id:int):
             status_code=400,
             detail="Pedido não está em rota"
         )
+
+    atualizar_ultimo_pedido_motoboy(db, pedido.motoboy_id)
     novo_status_pedido = alterar_pedidos_status_repository(db,pedido,status.ENTREGUE)
+
     return novo_status_pedido
 
 
@@ -159,7 +163,10 @@ def pedido_falhou(db:Session,id:int):
             status_code=400,
             detail="Pedido não está em rota"
         )
+
+    atualizar_ultimo_pedido_motoboy(db, pedido.motoboy_id)
     novo_status_pedido = alterar_pedidos_status_repository(db,pedido,status.FALHA_NA_ENTREGA)
+
     return novo_status_pedido
 
 
@@ -173,3 +180,22 @@ def deletar_pedido(db:Session,id:int):
         )
 
     return pedido
+
+def definir_motoboy_id_pedido(db:Session,pedido_id:int):
+    motoboy = procura_motoboy_disponivel(db)
+
+    pedido : Pedidos = busca_pedido_repository(db,pedido_id)
+
+    if not pedido:
+        raise HTTPException(
+            status_code=404,
+            detail='pedido não encontrado'
+        )
+
+    if pedido.motoboy_id != None:
+        raise HTTPException(
+            status_code=400,
+            detail='pedido ja estar ligado a um motoboy'
+        )
+
+    return defini_motoboy_id_pedido_repository(db,pedido,motoboy)

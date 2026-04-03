@@ -81,13 +81,25 @@ def delete_motoboy(db:Session,id:int):
 
     return motoboy
 
-def atualizar_ultimo_pedido(db:Session,id:int):
-    motoboy = atualiza_ultimo_pedido_repository(db,id)
+def atualizar_ultimo_pedido_motoboy(db:Session,motoboy_id:int):
+    motoboy = atualiza_ultimo_pedido_motoboy_repository(db,motoboy_id)
 
     if not motoboy:
         raise HTTPException(
             status_code=404,
             detail='Motoboy não encontrado'
+        )
+
+    return motoboy
+
+
+def procura_motoboy_disponivel(db:Session):
+    motoboy = procurar_motoboy_disponivel_repository(db)
+
+    if not motoboy:
+        raise HTTPException(
+            status_code=404,
+            detail='Nenhum motoboy disponivel no momento'
         )
 
     return motoboy

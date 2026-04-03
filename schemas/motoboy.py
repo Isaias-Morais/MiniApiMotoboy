@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -13,7 +15,7 @@ class MotoboyResponse(MotoboyBase):
     status_ativo : bool
     status_livre :bool
     data_de_criacao : datetime
-    ultimo_pedido : datetime
+    ultimo_pedido : Optional[datetime] = None
     class Config:
         from_attributes = True
 

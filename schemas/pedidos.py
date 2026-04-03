@@ -14,9 +14,10 @@ class PedidoBase(BaseModel):
 
 
 class PedidoResponse(PedidoBase):
-    id:int
-    status:StatusPedidos
-    data_de_criacao: datetime
+    id : int
+    motoboy_id : Optional[int] = None
+    status : StatusPedidos
+    data_de_criacao : datetime
     class Config:
         from_attributes = True
 
