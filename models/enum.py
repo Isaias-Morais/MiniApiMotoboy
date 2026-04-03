@@ -5,6 +5,7 @@ class StatusPedidos(str,Enum):
     PREPARO = 'preparando'
     CANCELADO = 'cancelado'
     PRONTO = 'pronto'
+    AGUADANDO_MOTOBOY = 'aguadando_motoboy'
     EM_ROTA = 'em_rota'
     ENTREGUE = 'entregue'
     FALHA_NA_ENTREGA = 'falha_na_entrega'
