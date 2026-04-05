@@ -40,6 +40,10 @@ async def cancel_pedido(id:int,db:Session = Depends(get_db)):
 async def ready_pedido(id:int,db:Session = Depends(get_db)):
     return pedido_pronto(db,id)
 
+@router.patch('/{id}/aguardando_motoboy_pedido',response_model=PedidoStatus)
+async def waiting_motoboy_pedido(id:int,db:Session = Depends(get_db)):
+    return pedido_aguardando_motoboy(db,id)
+
 @router.patch('/{id}/definir_motoboy_id',response_model=PedidoResponse)
 async def define_motoboy(id:int,db:Session = Depends(get_db)):
     return definir_motoboy_id_pedido(db,id)

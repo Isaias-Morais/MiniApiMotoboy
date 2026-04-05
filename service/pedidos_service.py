@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from repository.base_repository import salvar_objeto
 from models.pedido import Pedidos
 from models.enum import StatusPedidos
-from service.motoboy_service import atualizar_ultimo_pedido_motoboy,procura_motoboy_disponivel
+from service.motoboy_service import atualizar_ultimo_pedido_motoboy,procura_motoboy_disponivel,alterar_status_livre_motoboy
 from repository.pedidos_repository import *
 from fastapi import HTTPException
 from schemas.pedidos import *
@@ -119,7 +119,7 @@ def pedido_aguardando_motoboy(db:Session,id:int):
             detail="Pedido não esta pronto"
         )
 
-    if  pedido.motoboy_id:
+    if pedido.motoboy_id != None:
          raise HTTPException(
             status_code=400,
             detail="Pedido ja tem motoboy"
@@ -140,16 +140,16 @@ def iniciar_rota(db:Session,id:int):
             detail='pedido não encontrado'
         )
 
-    if pedido.status != status.PRONTO:
-        raise HTTPException(
-            status_code=400,
-            detail="Pedido não está pronto"
-        )
-
     if pedido.status != status.AGUADANDO_MOTOBOY:
         raise HTTPException(
             status_code=400,
-            detail="Pedido não tem motoboy"
+            detail="Pedido esta aguardando motoboy"
+        )
+
+    if not pedido.motoboy_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Pedido não esta ligado a nenhum motoboy"
         )
     novo_status_pedido = alterar_pedidos_status_repository(db,pedido,status.EM_ROTA)
     return novo_status_pedido
@@ -174,6 +174,7 @@ def pedido_entregue(db:Session,id:int):
         )
 
     atualizar_ultimo_pedido_motoboy(db, pedido.motoboy_id)
+    alterar_status_livre_motoboy(db, pedido.motoboy_id)
     novo_status_pedido = alterar_pedidos_status_repository(db,pedido,status.ENTREGUE)
 
     return novo_status_pedido
@@ -198,6 +199,7 @@ def pedido_falhou(db:Session,id:int):
         )
 
     atualizar_ultimo_pedido_motoboy(db, pedido.motoboy_id)
+    alterar_status_livre_motoboy(db,pedido.motoboy_id)
     novo_status_pedido = alterar_pedidos_status_repository(db,pedido,status.FALHA_NA_ENTREGA)
 
     return novo_status_pedido
@@ -215,8 +217,8 @@ def deletar_pedido(db:Session,id:int):
     return pedido
 
 def definir_motoboy_id_pedido(db:Session,pedido_id:int):
-    motoboy = procura_motoboy_disponivel(db)
-
+    motoboy :Motoboy = procura_motoboy_disponivel(db)
+    status = StatusPedidos
     pedido : Pedidos = busca_pedido_repository(db,pedido_id)
 
     if not pedido:
@@ -225,10 +227,17 @@ def definir_motoboy_id_pedido(db:Session,pedido_id:int):
             detail='pedido não encontrado'
         )
 
+    if pedido.status != status.AGUADANDO_MOTOBOY:
+        raise HTTPException(
+            status_code=400,
+            detail='Pedido não esta aguardando motoboy'
+        )
+
     if pedido.motoboy_id != None:
         raise HTTPException(
             status_code=400,
             detail='pedido ja estar ligado a um motoboy'
         )
 
+    alterar_status_livre_motoboy(db,motoboy.id)
     return defini_motoboy_id_pedido_repository(db,pedido,motoboy)
