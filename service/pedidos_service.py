@@ -101,6 +101,33 @@ def pedido_pronto(db:Session,id:int):
     return novo_status_pedido
 
 
+def pedido_aguardando_motoboy(db:Session,id:int):
+
+    status = StatusPedidos
+
+    pedido : Pedidos = busca_pedido_repository(db,id)
+
+    if not pedido:
+        raise HTTPException(
+            status_code=404,
+            detail='pedido não encontrado'
+        )
+
+    if pedido.status != status.PRONTO:
+        raise HTTPException(
+            status_code=400,
+            detail="Pedido não esta pronto"
+        )
+
+    if  pedido.motoboy_id:
+         raise HTTPException(
+            status_code=400,
+            detail="Pedido ja tem motoboy"
+        )
+    novo_status_pedido = alterar_pedidos_status_repository(db,pedido,status.AGUADANDO_MOTOBOY)
+    return novo_status_pedido
+
+
 def iniciar_rota(db:Session,id:int):
 
     status = StatusPedidos
@@ -117,6 +144,12 @@ def iniciar_rota(db:Session,id:int):
         raise HTTPException(
             status_code=400,
             detail="Pedido não está pronto"
+        )
+
+    if pedido.status != status.AGUADANDO_MOTOBOY:
+        raise HTTPException(
+            status_code=400,
+            detail="Pedido não tem motoboy"
         )
     novo_status_pedido = alterar_pedidos_status_repository(db,pedido,status.EM_ROTA)
     return novo_status_pedido

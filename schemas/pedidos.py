@@ -30,6 +30,7 @@ class PedidoList(BaseModel):
     descricao:str
     data_de_criacao:datetime
 
+
 class PedidoDelete(BaseModel):
     id : int
     data_de_criacao : datetime
