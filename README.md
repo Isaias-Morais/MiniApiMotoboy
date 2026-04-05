@@ -168,4 +168,4 @@ Projeto desenvolvido para prática de desenvolvimento backend, com foco em:
 
 ## 📌 Autor
 
-Desenvolvido por [Seu Nome]
+Desenvolvido por Isaias-Morais
